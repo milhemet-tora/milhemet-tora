@@ -57,20 +57,49 @@ function formatDate(value) {
   });
 }
 
-function articlePage({ title, description, date, body, depth }) {
+const SITE = "https://milhemet-tora.com";
+const OG_IMAGE = `${SITE}/assets/og-image.png`;
+
+// Link preview tags (Open Graph and Twitter), so a shared article shows its title and summary.
+function ogBlock({ title, description, relOut }) {
+  const url = `${SITE}/${relOut.split("/").map(encodeURIComponent).join("/")}`;
+  return `<!-- og:start -->
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="מלחמת תורה"/>
+<meta property="og:locale" content="he_IL"/>
+<meta property="og:title" content="${esc(title)}"/>
+<meta property="og:description" content="${esc(description)}"/>
+<meta property="og:url" content="${esc(url)}"/>
+<meta property="og:image" content="${OG_IMAGE}"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="משקל עם הרמב&quot;ם בצד ימין ודמות מכשפה בצד שמאל"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="${esc(title)}"/>
+<meta name="twitter:description" content="${esc(description)}"/>
+<meta name="twitter:image" content="${OG_IMAGE}"/>
+<!-- og:end -->
+`;
+}
+
+function articlePage({ title, description, date, body, depth, relOut }) {
   // Pages sit in posts/<category>/, so the shared assets are two levels up.
   const up = "../".repeat(depth);
+  const summary = description || title;
   return `<!DOCTYPE html>
 <html dir="rtl" lang="he">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>${esc(title)} · מלחמת תורה</title>
-<meta content="${esc(description)}" name="description"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<meta content="${esc(summary)}" name="description"/>
+${ogBlock({ title, description: summary, relOut })}<link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="${up}assets/article.css" rel="stylesheet"/>
+<link href="${up}favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="${up}favicon.ico" rel="alternate icon" sizes="any"/>
+<link href="${up}apple-touch-icon.png" rel="apple-touch-icon"/>
 </head>
 <body>
 <main class="wrap article">
@@ -230,6 +259,7 @@ async function writeArticles(articles) {
       date: formatDate(a.date),
       body: a.body,
       depth: 2,
+      relOut: a.relOut,
     });
     await writeFile(path.join(ROOT, a.relOut), html, "utf8");
   }
