@@ -4,8 +4,7 @@ backend:
   name: github
   repo: milhemet-tora/milhemet-tora
   branch: main
-  # TODO: URL of your OAuth proxy (see CMS-SETUP.md). Leave as-is until it is deployed.
-  base_url: https://YOUR-OAUTH-PROXY.example.com
+  base_url: https://auth.milhemet-tora.com
   auth_endpoint: auth
 
 # Commit straight to the branch. Switch to `editorial_workflow` for draft review.
