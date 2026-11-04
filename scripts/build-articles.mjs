@@ -100,6 +100,7 @@ ${ogBlock({ title, description: summary, relOut })}<link href="https://fonts.goo
 <link href="${up}favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="${up}favicon.ico" rel="alternate icon" sizes="any"/>
 <link href="${up}apple-touch-icon.png" rel="apple-touch-icon"/>
+<link href="${up}site.webmanifest" rel="manifest"/>
 </head>
 <body>
 <main class="wrap article">
