@@ -1,0 +1,76 @@
+# Decap CMS configuration. Full reference: https://decapcms.org/docs/configuration-options/
+
+backend:
+  name: github
+  repo: milhemet-tora/milhemet-tora
+  branch: main
+  # TODO: URL of your OAuth proxy (see CMS-SETUP.md). Leave as-is until it is deployed.
+  base_url: https://YOUR-OAUTH-PROXY.example.com
+  auth_endpoint: auth
+
+# Commit straight to the branch. Switch to `editorial_workflow` for draft review.
+publish_mode: simple
+
+# Uploaded images go here. The build script rewrites "/assets/..." for article pages.
+media_folder: assets/uploads
+public_folder: /assets/uploads
+
+locale: he
+
+collections:
+  - name: articles
+    label: מאמרים
+    label_singular: מאמר
+    folder: content/articles
+    create: true
+    extension: md
+    format: frontmatter
+    # File name = url_slug, so the Hebrew title does not have to be transliterated.
+    slug: "{{fields.url_slug}}"
+    identifier_field: title
+    summary: "{{title}} · {{category}}"
+    sortable_fields: [title, date, category]
+    fields:
+      - label: כותרת
+        name: title
+        widget: string
+
+      - label: כתובת הדף (באנגלית)
+        name: url_slug
+        widget: string
+        pattern: ['^[a-z0-9-]+$', 'רק אותיות אנגליות קטנות, ספרות ומקפים']
+        hint: 'לדוגמה: rambam-and-tzedaka. זה יהיה שם הקובץ בכתובת הדף.'
+
+      - label: קטגוריה
+        name: category
+        widget: select
+        options:
+          - { label: מסות, value: essays }
+          - { label: הלכה ורמב"ם, value: halacha-and-rambam }
+          - { label: קבלה וזוהר, value: kabbalah-and-zohar }
+          - { label: היתר הנאה, value: heter-hanaah }
+          - { label: פרשנות המקרא, value: bible-commentary }
+          - { label: לא מסווג, value: unsorted }
+
+      - label: תיאור קצר
+        name: description
+        widget: text
+        required: false
+        hint: 'מופיע ברשימת המאמרים. משפט אחד.'
+
+      - label: תאריך פרסום
+        name: date
+        widget: datetime
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        default: now
+
+      - label: טיוטה (לא לפרסם)
+        name: draft
+        widget: boolean
+        default: false
+        hint: 'כשמסומן, המאמר לא ייבנה לאתר.'
+
+      - label: תוכן המאמר
+        name: body
+        widget: markdown

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">מלחמת תורה</title>
+  <desc id="logo-desc">משקל עם הרמב"ם בצד ימין ודמות מכשפה בצד שמאל, וכיתוב: כאן עוסקים בהרס אשר זרע ביהדות היתר להתפרנס מהתורה, ב"קבלה" ומה שביניהם.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8f3e6"/>
+      <stop offset="1" stop-color="#ebe0c6"/>
+    </linearGradient>
+    <clipPath id="clipRambam"><circle cx="960" cy="330" r="95"/></clipPath>
+    <clipPath id="clipWitch"><circle cx="240" cy="330" r="95"/></clipPath>
+  </defs>
+
+  <!-- background and frame -->
+  <rect width="1200" height="800" fill="url(#paper)"/>
+  <rect x="20" y="20" width="1160" height="760" fill="none" stroke="#a08452" stroke-width="4"/>
+  <rect x="32" y="32" width="1136" height="736" fill="none" stroke="#a08452" stroke-width="1.5"/>
+
+  <!-- scale: pillar, base, finial -->
+  <rect x="500" y="582" width="200" height="22" rx="8" fill="#8a6d3b"/>
+  <rect x="460" y="604" width="280" height="16" rx="6" fill="#8a6d3b"/>
+  <rect x="594" y="180" width="12" height="404" fill="#8a6d3b"/>
+  <circle cx="600" cy="170" r="14" fill="#a08452"/>
+
+  <!-- beam and strings -->
+  <line x1="240" y1="250" x2="960" y2="250" stroke="#a08452" stroke-width="10" stroke-linecap="round"/>
+  <line x1="240" y1="250" x2="150" y2="430" stroke="#5b4a2b" stroke-width="3"/>
+  <line x1="240" y1="250" x2="330" y2="430" stroke="#5b4a2b" stroke-width="3"/>
+  <line x1="960" y1="250" x2="870" y2="430" stroke="#5b4a2b" stroke-width="3"/>
+  <line x1="960" y1="250" x2="1050" y2="430" stroke="#5b4a2b" stroke-width="3"/>
+
+  <!-- pans -->
+  <path d="M150 430 Q240 500 330 430 Z" fill="#a08452"/>
+  <path d="M870 430 Q960 500 1050 430 Z" fill="#a08452"/>
+
+  <!-- left: witch medallion -->
+  <g clip-path="url(#clipWitch)">
+    <rect x="145" y="235" width="190" height="190" fill="#2b2140"/>
+    <path d="M185 440 Q240 340 295 440 Z" fill="#111"/>
+    <polygon points="190,322 290,322 240,240" fill="#111"/>
+    <ellipse cx="240" cy="322" rx="64" ry="12" fill="#111"/>
+    <path d="M205 345 Q240 300 275 345 L280 400 L200 400 Z" fill="#111"/>
+    <ellipse cx="240" cy="345" rx="26" ry="30" fill="#8fb06a"/>
+    <circle cx="230" cy="340" r="3" fill="#111"/>
+    <circle cx="250" cy="340" r="3" fill="#111"/>
+    <path d="M240 348 L234 362 L244 362" fill="none" stroke="#4d6b30" stroke-width="2"/>
+    <path d="M226 368 Q240 378 254 368" fill="none" stroke="#111" stroke-width="3"/>
+  </g>
+  <circle cx="240" cy="330" r="95" fill="none" stroke="#a08452" stroke-width="5"/>
+
+  <!-- right: Rambam medallion (placeholder portrait) -->
+  <g clip-path="url(#clipRambam)">
+    <rect x="865" y="235" width="190" height="190" fill="#e9dcc0"/>
+    <path d="M880 440 Q960 330 1040 440 Z" fill="#2f3a4f"/>
+    <path d="M928 298 Q960 258 992 298 Q975 282 960 284 Q945 282 928 298 Z" fill="#c9c4bb"/>
+    <ellipse cx="960" cy="318" rx="30" ry="36" fill="#e8c9a0"/>
+    <path d="M930 322 Q960 382 990 322 Q986 366 960 374 Q934 366 930 322 Z" fill="#c9c4bb"/>
+    <circle cx="950" cy="314" r="2.5" fill="#333"/>
+    <circle cx="970" cy="314" r="2.5" fill="#333"/>
+  </g>
+  <circle cx="960" cy="330" r="95" fill="none" stroke="#a08452" stroke-width="5"/>
+  <text x="960" y="508" text-anchor="middle" font-family="Heebo, Arial, sans-serif" font-size="26" font-weight="700" fill="#1c2433">הרמב"ם</text>
+
+  <!-- caption -->
+  <line x1="300" y1="630" x2="900" y2="630" stroke="#a08452" stroke-width="2"/>
+  <text text-anchor="middle" font-family="Heebo, Arial, sans-serif" font-size="36" font-weight="700" fill="#1c2433">
+    <tspan x="600" y="688">כאן עוסקים בהרס אשר זרע ביהדות</tspan>
+    <tspan x="600" y="738">היתר להתפרנס מהתורה, ב&quot;קבלה&quot; ומה שביניהם.</tspan>
+  </text>
+</svg>

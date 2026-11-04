@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>מלחמת תורה</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --c1: #e8a0a0; --c2: #f2c75c; --c3: #8fc188; --c4: #7fb0de; --c5: #e0716b;
+    --bg: #f5f6f8; --surface: #ffffff; --text: #171b24; --muted: #6a7280;
+    --border: #e6e8ed; --shadow: 0 1px 2px rgba(16,24,40,.05), 0 10px 30px rgba(16,24,40,.07);
+    --radius: 20px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1116; --surface: #161b23; --text: #eceef2; --muted: #98a1b0;
+      --border: #242b36; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.4);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1116; --surface: #161b23; --text: #eceef2; --muted: #98a1b0;
+    --border: #242b36; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: "Heebo", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header */
+  .topbar {
+    background: linear-gradient(135deg, #141b2a 0%, #1f2a40 100%);
+    color: #f5f6f8; position: relative; overflow: hidden;
+  }
+  .topbar::after {
+    content: ""; position: absolute; inset-inline-end: -120px; top: -160px;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(242,199,92,.18), transparent 70%);
+    pointer-events: none;
+  }
+  .topbar-inner {
+    position: relative; max-width: 1200px; margin: 0 auto; padding: 26px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
+  }
+  .brand h1 { margin: 0; font-size: 1.75rem; font-weight: 800; letter-spacing: -.01em; }
+  .brand p {
+    display: inline-block; margin: 8px 0 0; padding: 3px 10px; border-radius: 999px;
+    font-size: .82rem; font-weight: 500; color: #d6dae3;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+  }
+  .linkrow { display: flex; gap: 10px; flex-wrap: wrap; }
+  .linkbtn {
+    display: inline-flex; align-items: center; justify-content: center; text-align: center;
+    padding: 10px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18);
+    color: #f5f6f8; text-decoration: none; font-size: .9rem; font-weight: 500;
+    background: rgba(255,255,255,.04);
+    transition: background .15s, border-color .15s, transform .15s;
+  }
+  .linkbtn:hover { background: rgba(255,255,255,.12); border-color: var(--c2); transform: translateY(-1px); }
+  .toc { display: none; }
+
+  /* Hero */
+  .logo { max-width: 600px; margin: 40px auto 8px; padding: 0 20px; text-align: center; }
+  .scene { position: relative; width: 100%; aspect-ratio: 1 / 1; }
+  .scales { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .fig { position: absolute; width: 25%; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover;
+          border: 4px solid var(--surface); box-shadow: 0 10px 28px rgba(0,0,0,.28); }
+  /* centres measured from the scales image: left pan ~ (21.5%, 68%), right pan ~ (78.5%, 57%) */
+  .fig-witch { left: calc(21.5% - 12.5%); top: calc(68% - 12.5%); }
+  .fig-rambam { left: calc(78.5% - 12.5%); top: calc(57% - 12.5%); }
+  .logo-caption {
+    margin: 6px auto 0; max-width: 34em; font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+    font-weight: 500; line-height: 1.7; color: var(--text);
+  }
+  .bottom { max-width: 1200px; margin: 0 auto; padding: 8px 20px 56px; text-align: center; }
+  .bottom .linkbtn { color: var(--text); background: var(--surface); border-color: var(--border); box-shadow: var(--shadow); }
+  .bottom .linkbtn:hover { border-color: var(--c2); }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 16px 20px 56px; }
+
+  .colheads, .board {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px;
+  }
+  .colheads {
+    position: sticky; top: 0; z-index: 5;
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    padding: 14px 0; margin-bottom: 16px;
+  }
+  .colhead {
+    font-weight: 700; font-size: .95rem; line-height: 1.4; text-align: center; padding: 12px 10px;
+    border-radius: 14px; background: var(--surface); border: 1px solid var(--border);
+    box-shadow: var(--shadow); position: relative;
+  }
+  .colhead::before {
+    content: ""; display: block; width: 28px; height: 4px; border-radius: 4px;
+    background: var(--accent); margin: 0 auto 8px;
+  }
+  .colhead:nth-child(1) { --accent: var(--c1); }
+  .colhead:nth-child(2) { --accent: var(--c2); }
+  .colhead:nth-child(3) { --accent: var(--c3); }
+  .colhead:nth-child(4) { --accent: var(--c4); }
+  .colhead:nth-child(5) { --accent: var(--c5); }
+
+  /* Each column is its own stack, so there are no gaps between items. */
+  .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .colhead-m { display: none; }
+  .slot { min-width: 0; }
+  .card {
+    position: relative; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 2px 4px rgba(16,24,40,.06), 0 18px 40px rgba(16,24,40,.12); }
+  .col .card { border-top: 3px solid var(--accent); }
+  .col .ttl { background: transparent; }
+  .thumb {
+    position: relative; display: block; width: 100%; padding: 0; border: 0; cursor: pointer;
+    aspect-ratio: 16 / 9; background: #000; overflow: hidden;
+  }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+  .card:hover .thumb img { transform: scale(1.04); }
+  .thumb::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.35), transparent 55%);
+    opacity: .6; transition: opacity .2s; pointer-events: none;
+  }
+  .thumb:hover::after { opacity: .3; }
+  .thumb iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .thumb:disabled { cursor: default; }
+  .play {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 52px; height: 52px; border-radius: 50%; z-index: 1;
+    background: rgba(255,255,255,.94); box-shadow: 0 6px 18px rgba(0,0,0,.35);
+    transition: transform .2s ease;
+  }
+  .card:hover .play { transform: translate(-50%, -50%) scale(1.08); }
+  .play::after {
+    content: ""; position: absolute; top: 50%; left: 56%; transform: translate(-50%, -50%);
+    border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent #111;
+  }
+  /* Video name, placed under its video */
+  .ttl {
+    margin: 0; padding: 12px 14px 14px; font-size: .95rem; font-weight: 600;
+    line-height: 1.5; text-align: right; color: var(--text);
+    /* fixed height (4 lines) so every card in the table is the same size */
+    height: 7.2rem; overflow: hidden;
+    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
+  }
+  .wipbox {
+    aspect-ratio: 16 / 9; display: grid; place-items: center;
+    border-bottom: 1px dashed var(--border); color: var(--muted);
+    font-weight: 600; font-size: 1rem; background: transparent;
+  }
+  .num {
+    position: absolute; top: 10px; right: 10px; z-index: 2; font-size: .72rem; font-weight: 700;
+    background: rgba(12,16,24,.72); color: #fff; border-radius: 999px; padding: 2px 9px; pointer-events: none;
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  }
+  .coltag { display: none; }
+
+  .wip {
+    height: 100%; min-height: 120px; display: grid; place-items: center; text-align: center;
+    border: 1.5px dashed var(--border); border-radius: var(--radius);
+    color: var(--muted); font-weight: 600; font-size: 1rem; background: transparent;
+  }
+
+  @media (max-width: 1100px) {
+    .board, .colheads { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 860px) {
+    .toc {
+      display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+      position: sticky; top: 0; z-index: 10; padding: 10px 20px;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .toc a {
+      flex: 0 0 auto; padding: 7px 14px; border-radius: 999px; font-size: .85rem; font-weight: 500;
+      color: var(--text); text-decoration: none; border: 1px solid var(--border); background: var(--surface);
+    }
+    .linkrow { width: 100%; }
+    .linkbtn { flex: 1 1 100%; }
+    .colheads { display: none; }
+    .board { grid-template-columns: 1fr; gap: 32px; }
+    .col { gap: 14px; }
+    .colhead-m {
+      display: block; margin: 0 0 2px; padding: 12px 16px; font-size: 1.05rem; font-weight: 700;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      box-shadow: var(--shadow); position: relative; padding-inline-start: 24px;
+    }
+    .colhead-m::before {
+      content: ""; position: absolute; inset-inline-start: 10px; top: 50%; transform: translateY(-50%);
+      width: 4px; height: 60%; border-radius: 4px; background: var(--accent);
+    }
+    .coltag {
+      display: block; position: absolute; bottom: 8px; right: 8px; z-index: 1;
+      font-size: .7rem; font-weight: 700; background: var(--surface); color: var(--text);
+      border-radius: 999px; padding: 2px 9px; max-width: calc(100% - 16px);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .wip .coltag { position: static; display: block; margin-bottom: 6px; color: var(--muted); }
+    .wip span { display: block; }
+    .play { width: 46px; height: 46px; }
+    .topbar-inner { padding: 22px 16px; }
+    .logo, .bottom, main { padding-inline: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+<div class="topbar-inner">
+<div class="brand">
+<h1>מלחמת תורה</h1>
+<p>75 סרטונים</p>
+</div>
+<nav aria-label="קישורים" class="linkrow">
+<a class="linkbtn" href="posts/Articles.html">מספיק סרטונים! רוצה לקרוא? חומר עיוני</a>
+<a class="linkbtn" href="https://tgvtmlhmttrh.blogspot.com/2017/09/blog-post.html" rel="noopener" target="_blank">תגובות, הערות, הארות, הסגות, דיונים</a>
+<a class="linkbtn" href="https://tehtovtrbanim.blogspot.com/2017/11/blog-post.html" rel="noopener" target="_blank">תכתובת עם רבנים שכרים/מקובלים</a>
+<a class="linkbtn" title="חללי מלחמת יום כיפור לפי מצב משפחתי (PDF)" href="https://drive.google.com/file/d/1YrvC5FhhbKbkpXf_FeuZ9QGYyTqjZ3eA/view" rel="noopener" target="_blank">חללי מלחמת יום כיפור לפי מצב משפחתי (PDF)</a>
+<a class="linkbtn" title="סידור לפי נוסח משנה תורה לכל השנה. כולל הלכות והגדה. (PDF)" href="https://drive.google.com/file/d/0B_SYogRpdoWsTDFlYTZuWlUtQUE/view?usp=sharing" rel="noopener" target="_blank">סידור לפי נוסח משנה תורה לכל השנה. כולל הלכות והגדה. (PDF)</a>
+</nav>
+</div>
+</header>
+<section class="logo">
+<div class="scene">
+<img alt="" class="scales" src="assets/scales.png"/>
+<img alt="" class="fig fig-witch" src="assets/witch.svg"/>
+<img alt='הרמב"ם' class="fig fig-rambam" src="assets/rambam.png"/>
+</div>
+<p class="logo-caption">כאן עוסקים בהרס אשר זרע ביהדות היתר להתפרנס מהתורה, ב"קבלה" ומה שביניהם.</p>
+</section>
+<nav aria-label="תוכן העניינים" class="toc">
+<a href="#col-1">בגנות ההיתר להתפרנס מהתורה</a><a href="#col-2">איוולת הפסיקה השכירה</a><a href="#col-3">בדיית הזוהר וה"קבלה"</a><a href="#col-4">בירור מושגים</a><a href="#col-5">המלך עירום!</a>
+</nav>
+<main>
+<div aria-hidden="true" class="colheads">
+<div class="colhead">בגנות ההיתר להתפרנס מהתורה</div><div class="colhead">איוולת הפסיקה השכירה</div><div class="colhead">בדיית הזוהר וה"קבלה"</div><div class="colhead">בירור מושגים</div><div class="colhead">המלך עירום!</div>
+</div>
+<div class="board">
+<section class="col" id="col-1" style="--accent:var(--c1)"><h2 class="colhead-m">בגנות ההיתר להתפרנס מהתורה</h2>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 1, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="5_NCMowIax8" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/5_NCMowIax8/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">מלחמת תורה פרק א' יחוד ישראל</p><span class="num">1</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 2, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="Tmkjf614hAg" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/Tmkjf614hAg/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">פרק ב' - כי הכסף יעוור (דוד)</p><span class="num">2</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 3, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="abJUIs8akKU" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/abJUIs8akKU/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">פרק ג' - ואין תוכחה (דוד)</p><span class="num">3</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 4, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="fvGtxRiHq_I" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/fvGtxRiHq_I/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">פרק ד' - לא תתגודדו (דוד)</p><span class="num">4</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 5, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="Ji-8dorgtUs" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/Ji-8dorgtUs/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">פרק ה' - יום הזיכרון לשואה (דוד)</p><span class="num">5</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 6, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="qH1z1E5yKYs" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/qH1z1E5yKYs/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">פרק ו' - 70 פנים לתורה? (דוד)</p><span class="num">6</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 7, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="4sdh0apSTLM" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/4sdh0apSTLM/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">פרק ז' - סיכום (דוד)</p><span class="num">7</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 8, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="o-UAs8KAH68" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/o-UAs8KAH68/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">לא קרדום פרק א'</p><span class="num">8</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 9, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="SVOPeyCrfuc" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/SVOPeyCrfuc/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">לא קרדום פרק ב'</p><span class="num">9</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 10, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="UmoB_Je--t0" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/UmoB_Je--t0/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">לא קרדום פרק ג'</p><span class="num">10</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 11, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="9nuQo-CFeF0" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/9nuQo-CFeF0/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">לא קרדום פרק ד'</p><span class="num">11</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 12, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="_Y5P3GBdZGY" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/_Y5P3GBdZGY/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">קינת הקרדום שיר</p><span class="num">12</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 13, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="bu8RCfdDauQ" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/bu8RCfdDauQ/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">עוד מפניני רש"י</p><span class="num">13</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 14, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="FzNQDN-tG_Y" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/FzNQDN-tG_Y/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">הבלוף הקלף והתם</p><span class="num">14</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 15, בגנות ההיתר להתפרנס מהתורה" class="thumb" data-id="6q1IrZFO_G0" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/6q1IrZFO_G0/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">הקלף והדוכסוסטוס</p><span class="num">15</span></article></div>
+<div class="slot"><article class="card wipcard"><div class="wipbox">בעבודה</div><div class="ttl"></div></article></div></section>
+<section class="col" id="col-2" style="--accent:var(--c2)"><h2 class="colhead-m">איוולת הפסיקה השכירה</h2>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 1, איוולת הפסיקה השכירה" class="thumb" data-id="uH_SFpGxuIQ" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/uH_SFpGxuIQ/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">סך הכל כזית מצה (רפי) (הפרזות, דמיונות ושיבושים)</p><span class="num">1</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 2, איוולת הפסיקה השכירה" class="thumb" data-id="yxUplrsTRtc" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/yxUplrsTRtc/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">מנהגי אבלות בספירת העומר - שיבושים והמצאות</p><span class="num">2</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 3, איוולת הפסיקה השכירה" class="thumb" data-id="4FNk3BvCUHw" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/4FNk3BvCUHw/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">תיקון (קילקול) ליל שבועות (רפי)</p><span class="num">3</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 4, איוולת הפסיקה השכירה" class="thumb" data-id="RRFvglLstyw" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/RRFvglLstyw/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">אי הנחת תפילין בחול המועד (רפי)</p><span class="num">4</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 5, איוולת הפסיקה השכירה" class="thumb" data-id="ckLVd-Moh2U" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/ckLVd-Moh2U/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">אמירת ברכות השחר מימי חז"ל עד ימינו ומשמעות השינוי (דוד)</p><span class="num">5</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 6, איוולת הפסיקה השכירה" class="thumb" data-id="oj4Bn-p-j-g" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/oj4Bn-p-j-g/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ברכת לבנה - מברכת שבח לעבודה זרה (רפי)</p><span class="num">6</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 7, איוולת הפסיקה השכירה" class="thumb" data-id="fMNQXPdzcg4" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/fMNQXPdzcg4/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">סוכות: האושפזין והדת החדשה (רפי)</p><span class="num">7</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 8, איוולת הפסיקה השכירה" class="thumb" data-id="9qSE8WoSwV0" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/9qSE8WoSwV0/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">יהוה אלהיכם אמת (רפי)</p><span class="num">8</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 9, איוולת הפסיקה השכירה" class="thumb" data-id="c0c7qBy7DXs" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/c0c7qBy7DXs/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ועשית כל אשר יורך! הכל? ממש</p><span class="num">9</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 10, איוולת הפסיקה השכירה" class="thumb" data-id="Uvqn-p3eIcQ" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/Uvqn-p3eIcQ/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">מתכון להכנה מצה בבית בין חסידות להתחסדות</p><span class="num">10</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 11, איוולת הפסיקה השכירה" class="thumb" data-id="KLCJrzatZ04" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/KLCJrzatZ04/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">אמונות טפלות בגיבוי "גדולי ישראל"</p><span class="num">11</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 12, איוולת הפסיקה השכירה" class="thumb" data-id="6tj4vOgphaA" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/6tj4vOgphaA/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">קדיש יתום ויתום המקדש</p><span class="num">12</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 13, איוולת הפסיקה השכירה" class="thumb" data-id="fAB5vop33uQ" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/fAB5vop33uQ/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ה"סת"ם אינו סתם</p><span class="num">13</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 14, איוולת הפסיקה השכירה" class="thumb" data-id="RC96XiA7M6M" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/RC96XiA7M6M/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">בין חסידות לבין התחסדות</p><span class="num">14</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 15, איוולת הפסיקה השכירה" class="thumb" data-id="y9FYTYiK_XU" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/y9FYTYiK_XU/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">האחריות שבכף זכות</p><span class="num">15</span></article></div>
+<div class="slot"><article class="card wipcard"><div class="wipbox">בעבודה</div><div class="ttl"></div></article></div></section>
+<section class="col" id="col-3" style="--accent:var(--c3)"><h2 class="colhead-m">בדיית הזוהר וה"קבלה"</h2>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 1, בדיית הזוהר וה"קבלה"' class="thumb" data-id="5Tx1OxHvzNY" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/5Tx1OxHvzNY/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">מי באמת כתב את ספר הזוהר? (דוד)</p><span class="num">1</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 2, בדיית הזוהר וה"קבלה"' class="thumb" data-id="IPOOOifVCeg" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/IPOOOifVCeg/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ספר הזוהר = עבודה זרה. פרק א. פתיחה. הצהרת הכוונות (רפי)</p><span class="num">2</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 3, בדיית הזוהר וה"קבלה"' class="thumb" data-id="eJfzt-wXe7M" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/eJfzt-wXe7M/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ספר הזוהר = עבודה זרה. פרק ב'. מקור הספר. (רפי)</p><span class="num">3</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 4, בדיית הזוהר וה"קבלה"' class="thumb" data-id="sIjmyJeF-3c" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/sIjmyJeF-3c/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ספר הזוהר = עבודה זרה. פרק ג'. (רפי)</p><span class="num">4</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 5, בדיית הזוהר וה"קבלה"' class="thumb" data-id="NgyqLaEywew" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/NgyqLaEywew/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ספר הזוהר = עבודה זרה. פרק ד'. גלגולי נשמות (רפי)</p><span class="num">5</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 6, בדיית הזוהר וה"קבלה"' class="thumb" data-id="aFH8vNzqjR4" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/aFH8vNzqjR4/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">מי זה דיקרנוסא? או פרנסת מקובלים ללא תפילה (רפי)</p><span class="num">6</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 7, בדיית הזוהר וה"קבלה"' class="thumb" data-id="luPcVuua458" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/luPcVuua458/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">סוד "סיטרא חרטא" לפי קבלת אר"י ר' אבוחצירא יצא לצוד ונמצא ניצוד (שת"פ)</p><span class="num">7</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 8, בדיית הזוהר וה"קבלה"' class="thumb" data-id="TWnPeUhxiLM" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/TWnPeUhxiLM/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ספר הזוהר = עבודה זרה פרק ו'. שיבושי זמנים ותקופות (רפי)</p><span class="num">8</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 9, בדיית הזוהר וה"קבלה"' class="thumb" data-id="VbEVrXqTcUc" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/VbEVrXqTcUc/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">בלוף הקבלה בחמש דקות</p><span class="num">9</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 10, בדיית הזוהר וה"קבלה"' class="thumb" data-id="na_uepmmqgM" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/na_uepmmqgM/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">סגולות המלחמה</p><span class="num">10</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 11, בדיית הזוהר וה"קבלה"' class="thumb" data-id="X4FPPJonGxM" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/X4FPPJonGxM/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">מי ולמה צריך משיח?</p><span class="num">11</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 12, בדיית הזוהר וה"קבלה"' class="thumb" data-id="H19cAGoE_wg" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/H19cAGoE_wg/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">על הנסים ועל הנמנעות</p><span class="num">12</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 13, בדיית הזוהר וה"קבלה"' class="thumb" data-id="2aQ69oAKqEQ" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/2aQ69oAKqEQ/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">לחקור את החוקרים</p><span class="num">13</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 14, בדיית הזוהר וה"קבלה"' class="thumb" data-id="AeyrvW5AkHA" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/AeyrvW5AkHA/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ביעור עבודה זרה מול הר מירון</p><span class="num">14</span></article></div>
+<div class="slot"><article class="card"><button aria-label='הפעל סרטון 15, בדיית הזוהר וה"קבלה"' class="thumb" data-id="pAiwqqCal_s" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/pAiwqqCal_s/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ל"ג בעומר - מבערים עבודה זרה!!!</p><span class="num">15</span></article></div>
+<div class="slot"><article class="card wipcard"><div class="wipbox">בעבודה</div><div class="ttl"></div></article></div></section>
+<section class="col" id="col-4" style="--accent:var(--c4)"><h2 class="colhead-m">בירור מושגים</h2>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 1, בירור מושגים" class="thumb" data-id="3aCC4L6Uk_g" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/3aCC4L6Uk_g/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">צדיק כתמר יפרח (רפי)</p><span class="num">1</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 2, בירור מושגים" class="thumb" data-id="85OTrE-Y8Q8" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/85OTrE-Y8Q8/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">הנהגת משה מול הנהגת יוסף (רפי)</p><span class="num">2</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 3, בירור מושגים" class="thumb" data-id="b77K_Pnhnx0" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/b77K_Pnhnx0/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">סוד התפילה, או...? (דוד)</p><span class="num">3</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 4, בירור מושגים" class="thumb" data-id="Vr8HBihUtfI" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/Vr8HBihUtfI/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">מושג "אמונת החכמים" - מקומו, גדרותיו ונזקי הפרזתו</p><span class="num">4</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 5, בירור מושגים" class="thumb" data-id="rDEzy5it_iM" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/rDEzy5it_iM/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">"כסיל כי יבטח" - בירור מושג בטחון בה' (דוד)</p><span class="num">5</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 6, בירור מושגים" class="thumb" data-id="4MyR95WUYMo" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/4MyR95WUYMo/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">טכנולוגיה של בלבול מוח או "תמים תהיה עם ה' אלוקיך" (דוד)</p><span class="num">6</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 7, בירור מושגים" class="thumb" data-id="s29zH04LT2s" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/s29zH04LT2s/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">דע מה תשיב לאפיקורס (דוד)</p><span class="num">7</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 8, בירור מושגים" class="thumb" data-id="agv_q3qNt9E" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/agv_q3qNt9E/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">תורת הסוד או סוד התורה</p><span class="num">8</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 9, בירור מושגים" class="thumb" data-id="uqyHN-fYnR8" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/uqyHN-fYnR8/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">למעון יארכון ימיך קצת על טעמי מצוות וקצת על שכר ועונש</p><span class="num">9</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 10, בירור מושגים" class="thumb" data-id="Kt5cB0rjki4" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/Kt5cB0rjki4/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">אבולוציה נגד מדע</p><span class="num">10</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 11, בירור מושגים" class="thumb" data-id="88Ck-bMKGrE" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/88Ck-bMKGrE/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">האם שוויון הוא זכות?</p><span class="num">11</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 12, בירור מושגים" class="thumb" data-id="1cN5kR5rb3k" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/1cN5kR5rb3k/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">בלוף הדטרמיניזם</p><span class="num">12</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 13, בירור מושגים" class="thumb" data-id="0dRAlEKCJO4" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/0dRAlEKCJO4/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">דיפ סטייט ושבט לוי</p><span class="num">13</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 14, בירור מושגים" class="thumb" data-id="Rc03s_KCxnA" data-list="PLUP38hkKSaG7g-JKnga8JovRHci9o1V3q" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/Rc03s_KCxnA/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">נבוא וחלום במקרא</p><span class="num">14</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 15, בירור מושגים" class="thumb" data-id="K7EGcLreLPM" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/K7EGcLreLPM/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">גדי בחלב אלת הסבירות</p><span class="num">15</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 16, בירור מושגים" class="thumb" data-id="NjTuN8_TjJM" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/NjTuN8_TjJM/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">פסח זה דילוג? מי מדלג</p><span class="num">16</span></article></div></section>
+<section class="col" id="col-5" style="--accent:var(--c5)"><h2 class="colhead-m">המלך עירום!</h2>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 1, המלך עירום!" class="thumb" data-id="SbtgFcwD5Ug" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/SbtgFcwD5Ug/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">האם יוסף קארו שיקר? (רפי)</p><span class="num">1</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 2, המלך עירום!" class="thumb" data-id="VZv9gqoYK2E" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/VZv9gqoYK2E/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">קווים לדמותו של חיים ויטאל (סיפורה של ענוה) (רפי)</p><span class="num">2</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 3, המלך עירום!" class="thumb" data-id="EOa5IwCecdE" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/EOa5IwCecdE/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">יצחק יוסף נגד הדרדעים (רפי)</p><span class="num">3</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 4, המלך עירום!" class="thumb" data-id="sELuTzYfcLU" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/sELuTzYfcLU/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">יצחק ברדא ופיסיקת החלקיקים (רפי)</p><span class="num">4</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 5, המלך עירום!" class="thumb" data-id="eF48gkFmZFQ" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/eF48gkFmZFQ/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">יצחק ברדא וסוכנות החלל נאסא (רפי)</p><span class="num">5</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 6, המלך עירום!" class="thumb" data-id="K0h0QNrBOho" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/K0h0QNrBOho/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">עבדיה יוסף ותרמית העגונות (רפי)</p><span class="num">6</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 7, המלך עירום!" class="thumb" data-id="YRz2knmk4-w" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/YRz2knmk4-w/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">מהומת הלהט"ב והרבנים השכירים</p><span class="num">7</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 8, המלך עירום!" class="thumb" data-id="t1WBdSrEw8w" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/t1WBdSrEw8w/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">האם רש"י היה כסיל?</p><span class="num">8</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 9, המלך עירום!" class="thumb" data-id="KicNF_tVQFM" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/KicNF_tVQFM/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">ביקורת של ביקורת המקרא</p><span class="num">9</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 10, המלך עירום!" class="thumb" data-id="c6ZZYeDiNX8" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/c6ZZYeDiNX8/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">האדם הצודק (מין ביולוגי)</p><span class="num">10</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 11, המלך עירום!" class="thumb" data-id="iAg3dATeoBQ" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/iAg3dATeoBQ/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">בלוף מוסר המלחמה בשתי דקות</p><span class="num">11</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 12, המלך עירום!" class="thumb" data-id="GVMqa19UWLQ" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/GVMqa19UWLQ/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">מה חפץ חופץ חיים?</p><span class="num">12</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 13, המלך עירום!" class="thumb" data-id="DWIC7Qjy38k" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/DWIC7Qjy38k/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">החידושים של רבינו תם</p><span class="num">13</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 14, המלך עירום!" class="thumb" data-id="KQYSIIpqRrE" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/KQYSIIpqRrE/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">התם רבינו תם?</p><span class="num">14</span></article></div>
+<div class="slot"><article class="card"><button aria-label="הפעל סרטון 15, המלך עירום!" class="thumb" data-id="r_joopr5n0g" type="button"><img alt="" decoding="async" loading="lazy" src="https://i.ytimg.com/vi/r_joopr5n0g/hqdefault.jpg"/><span aria-hidden="true" class="play"></span></button><p class="ttl">גם מלך שלנו ערום</p><span class="num">15</span></article></div>
+<div class="slot"><article class="card wipcard"><div class="wipbox">בעבודה</div><div class="ttl"></div></article></div></section>
+</div>
+</main>
+<footer class="bottom">
+<a class="linkbtn" href="posts/Articles.html">מספיק סרטונים! רוצה לקרוא? חומר עיוני</a>
+</footer>
+<script>
+  // Click-to-play: the video loads only when the reader presses play.
+  document.querySelectorAll('.thumb').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var f = document.createElement('iframe');
+      var lst = btn.getAttribute('data-list');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(btn.getAttribute('data-id')) + '?autoplay=1&rel=0' + (lst ? '&list=' + encodeURIComponent(lst) : '');
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      f.title = 'סרטון';
+      btn.replaceChildren(f);
+      btn.disabled = true;
+    });
+  });
+</script>
+</body>
+</html>

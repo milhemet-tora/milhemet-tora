@@ -1,0 +1,25 @@
+<!doctype html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="noindex, nofollow" name="robots"/>
+<title>ניהול מאמרים · מלחמת תורה</title>
+</head>
+<body>
+<!-- Decap CMS admin. Config: admin/config.yml. Setup: CMS-SETUP.md -->
+<script>
+  // Register preview styles before Decap starts, so the editor preview looks like the article page.
+  window.CMS_MANUAL_INIT = true;
+</script>
+<script src="https://unpkg.com/decap-cms@3.17.1/dist/decap-cms.js"></script>
+<script>
+  CMS.registerPreviewStyle(new URL("../assets/article.css", location.href).href);
+  CMS.registerPreviewStyle(
+    "body { direction: rtl; text-align: right; font-family: Heebo, system-ui, sans-serif; line-height: 1.7; padding: 16px; }",
+    { raw: true }
+  );
+  CMS.init();
+</script>
+</body>
+</html>
