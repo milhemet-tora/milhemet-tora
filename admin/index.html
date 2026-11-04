@@ -5,6 +5,40 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="noindex, nofollow" name="robots"/>
 <title>ניהול מאמרים · מלחמת תורה</title>
+<script>
+  // Video list in the panel: colour each video by its column, as on the home page.
+  // Only styles are changed, never text, because Decap's React code owns the text.
+  (function () {
+    var COLOURS = {
+      "col-1": "#e8a0a0",
+      "col-2": "#f2c75c",
+      "col-3": "#8fc188",
+      "col-4": "#7fb0de",
+      "col-5": "#e0716b",
+    };
+    function paint(el, colour) {
+      el.style.background = colour + "33";
+      el.style.borderInlineStart = "6px solid " + colour;
+    }
+    function tint() {
+      // Rows in the video list: the card (li) around each video link ends with "· col-N".
+      document.querySelectorAll('a[href*="/collections/videos/entries/"]').forEach(function (a) {
+        var m = a.textContent.match(/·\s*(col-[1-5])\s*$/);
+        if (m) paint(a.closest("li") || a, COLOURS[m[1]]);
+      });
+      // Group headers, when the list is grouped by category: a leaf element that reads "col-N".
+      document.querySelectorAll("body *").forEach(function (el) {
+        if (el.children.length || el.dataset.column) return;
+        var g = el.textContent.trim().match(/^(?:.*:\s*)?(col-[1-5])$/);
+        if (!g) return;
+        el.dataset.column = g[1];
+        paint(el, COLOURS[g[1]]);
+      });
+    }
+    // The panel renders after this page loads and again on every change, so watch the page.
+    new MutationObserver(tint).observe(document.documentElement, { childList: true, subtree: true });
+  })();
+</script>
 </head>
 <body>
 <!-- Decap CMS admin. Config: admin/config.yml. Setup: CMS-SETUP.md -->

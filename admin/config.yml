@@ -1,5 +1,7 @@
 # Decap CMS configuration. Full reference: https://decapcms.org/docs/configuration-options/
 
+local_backend: true
+
 backend:
   name: github
   repo: milhemet-tora/milhemet-tora
@@ -51,6 +53,15 @@ collections:
           - { label: פרשנות המקרא, value: bible-commentary }
           - { label: לא מסווג, value: unsorted }
 
+      - label: כותב
+        name: author
+        widget: select
+        options:
+          - { label: דוד, value: david }
+          - { label: רפי, value: rafi }
+          - { label: אנונימי, value: anonymous }
+        hint: 'דוד ורפי: המאמר יופיע תחת המאמרים שלהם בדף המאמרים. אנונימי: המאמר יופיע תחת "מאמרים נוספים".'
+
       - label: תיאור קצר
         name: description
         widget: text
@@ -73,3 +84,52 @@ collections:
       - label: תוכן המאמר
         name: body
         widget: markdown
+
+  - name: videos
+    label: סרטונים
+    label_singular: סרטון
+    folder: content/videos
+    create: true
+    extension: md
+    format: frontmatter
+    # Video files have no public address, so name them by date and time.
+    slug: "{{year}}-{{month}}-{{day}}-{{hour}}-{{minute}}-{{second}}"
+    identifier_field: title
+    summary: "{{title}} · {{category}}"
+    sortable_fields: [title, date, category]
+    # One list, grouped by the five columns of the home page (colours are set in admin/index.html).
+    view_groups:
+      - label: עמודה בעמוד הראשי
+        field: category
+    fields:
+      - label: כותרת
+        name: title
+        widget: string
+
+      - label: קישור ליוטיוב
+        name: url
+        widget: string
+        hint: 'הדביקו את הקישור מיוטיוב. קישור לפלייליסט (עם list=) יפעיל את הפלייליסט.'
+
+      - label: קטגוריה (עמודה בעמוד הראשי)
+        name: category
+        widget: select
+        options:
+          - { label: בגנות ההיתר להתפרנס מהתורה, value: col-1 }
+          - { label: איוולת הפסיקה השכירה, value: col-2 }
+          - { label: בדיית הזוהר וה"קבלה", value: col-3 }
+          - { label: בירור מושגים, value: col-4 }
+          - { label: המלך עירום!, value: col-5 }
+
+      - label: תאריך
+        name: date
+        widget: datetime
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        default: now
+
+      - label: טיוטה (לא לפרסם)
+        name: draft
+        widget: boolean
+        default: false
+        hint: 'כשמסומן, הסרטון לא יופיע בעמוד הראשי.'

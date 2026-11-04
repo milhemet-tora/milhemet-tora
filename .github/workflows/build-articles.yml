@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - "content/articles/**"
+      - "content/videos/**"
       - "scripts/build-articles.mjs"
   workflow_dispatch:
 
@@ -36,11 +37,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add posts scripts/generated.json
+          git add posts index.html scripts/generated.json
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Build articles"
+            git commit -m "Build site from CMS content"
             git pull --rebase
             git push
           fi
