@@ -47,8 +47,8 @@
     pointer-events: none;
   }
   .theme-btn {
-    position: absolute; top: 12px; inset-inline-start: 12px; z-index: 2;
-    font-family: inherit; font-size: .85rem; font-weight: 600; padding: 8px 12px; border-radius: 999px;
+    position: absolute; top: 12px; inset-inline-end: 12px; z-index: 2;
+    font-family: inherit; font-size: 1.1rem; line-height: 1; padding: 8px 10px; border-radius: 999px;
     border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08); color: #f5f6f8; cursor: pointer;
   }
   .theme-btn:hover { background: rgba(255,255,255,.16); }
@@ -262,7 +262,7 @@
 <body>
 <header class="topbar">
 <div class="topbar-inner">
-<button class="theme-btn" id="theme-toggle" type="button" aria-label="מעבר בין מצב בהיר לכהה">מצב כהה</button>
+<button class="theme-btn" id="theme-toggle" type="button" aria-label="מעבר בין מצב בהיר לכהה">🌙</button>
 <div class="brand">
 <h1>מלחמת תורה</h1>
 <p>76 סרטונים</p>
@@ -418,7 +418,7 @@
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
     function label() {
-      btn.textContent = isDark() ? "מצב בהיר" : "מצב כהה";
+      btn.textContent = isDark() ? "☀️" : "🌙";
     }
     btn.addEventListener("click", function () {
       var next = isDark() ? "light" : "dark";

@@ -33,8 +33,9 @@
 <!-- favicon:end -->
 <style>
   .theme-btn {
-    font-family: inherit; font-size: .85rem; font-weight: 600; padding: 6px 12px; border-radius: 999px;
+    font-family: inherit; font-size: 1.1rem; line-height: 1; padding: 6px 10px; border-radius: 999px;
     border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer;
+    margin-inline-start: auto;
   }
   .theme-btn:hover { border-color: var(--accent); }
 </style>
@@ -47,13 +48,16 @@
     } catch (e) {}
   })();
 </script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b723b6e6f6924315ab26c544c5bea4a4"}'></script>
+<!-- End Cloudflare Web Analytics -->
 </head>
 <body>
 <header class="site-bar">
 <div class="wrap bar-inner">
 <a class="home" href="../index.html">מלחמת תורה</a>
 <nav aria-label="מיקום" class="crumb"><a href="../index.html">הראשי</a><span aria-hidden="true">/</span><span>מפתח מאמרים</span></nav>
-<button class="theme-btn" id="theme-toggle" type="button" aria-label="מעבר בין מצב בהיר לכהה">מצב כהה</button>
+<button class="theme-btn" id="theme-toggle" type="button" aria-label="מעבר בין מצב בהיר לכהה">🌙</button>
 </div>
 </header>
 <main class="wrap article">
@@ -123,7 +127,7 @@
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
     function label() {
-      btn.textContent = isDark() ? "מצב בהיר" : "מצב כהה";
+      btn.textContent = isDark() ? "☀️" : "🌙";
     }
     btn.addEventListener("click", function () {
       var next = isDark() ? "light" : "dark";

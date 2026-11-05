@@ -101,6 +101,9 @@ ${ogBlock({ title, description: summary, relOut })}<link href="https://fonts.goo
 <link href="${up}favicon.ico" rel="alternate icon" sizes="any"/>
 <link href="${up}apple-touch-icon.png" rel="apple-touch-icon"/>
 <link href="${up}site.webmanifest" rel="manifest"/>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b723b6e6f6924315ab26c544c5bea4a4"}'></script>
+<!-- End Cloudflare Web Analytics -->
 </head>
 <body>
 <main class="wrap article">
