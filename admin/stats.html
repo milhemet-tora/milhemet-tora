@@ -1,0 +1,142 @@
+<!doctype html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="noindex, nofollow" name="robots"/>
+<title>סטטיסטיקות · מלחמת תורה</title>
+<style>
+  :root {
+    --bg: #fbf9f4; --fg: #222; --muted: #6b6b6b; --line: #e3ded3; --card: #fff; --accent: #7fb0de;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #1b1b1b; --fg: #eee; --muted: #aaa; --line: #3a3a3a; --card: #242424; }
+  }
+  :root[data-theme="dark"] { --bg: #1b1b1b; --fg: #eee; --muted: #aaa; --line: #3a3a3a; --card: #242424; }
+  body { background: var(--bg); color: var(--fg); margin: 0; font-family: Heebo, system-ui, sans-serif; line-height: 1.6; }
+  main { max-width: 960px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 1.6rem; margin: 8px 0; }
+  .muted { color: var(--muted); font-size: 0.9rem; }
+  .totals { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 18px; min-width: 150px; }
+  .stat b { display: block; font-size: 1.8rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+  h2 { font-size: 1.1rem; margin: 4px 0 8px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 6px 4px; border-bottom: 1px solid var(--line); text-align: start; font-size: 0.95rem; }
+  td.n, th.n { text-align: end; white-space: nowrap; }
+  td.name { word-break: break-all; }
+  .error { color: #c0392b; margin: 16px 0; }
+  button { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--fg); cursor: pointer; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>סטטיסטיקות צפייה</h1>
+  <p class="muted"><a href="index.html">חזרה לניהול המאמרים</a> · <button id="reload" type="button">רענון</button></p>
+  <p id="status" class="muted">טוען…</p>
+  <div id="error" class="error" hidden></div>
+
+  <div class="totals" id="totals" hidden>
+    <div class="stat"><span class="muted">צפיות (30 יום)</span><b id="views">0</b></div>
+    <div class="stat"><span class="muted">ביקורים (30 יום)</span><b id="visits">0</b></div>
+  </div>
+
+  <div class="grid" id="tables" hidden>
+    <section><h2>דפים</h2><table id="t-pages"></table></section>
+    <section><h2>מדינות</h2><table id="t-countries"></table></section>
+    <section><h2>מקורות הגעה</h2><table id="t-referrers"></table></section>
+    <section><h2>דפדפנים</h2><table id="t-browsers"></table></section>
+    <section><h2>מכשירים</h2><table id="t-devices"></table></section>
+  </div>
+</main>
+
+<script>
+  // Worker that answers /stats for logged-in CMS editors (see oauth-proxy/worker.js).
+  const STATS_URL = "https://auth.milhemet-tora.com/stats";
+
+  // Decap keeps the GitHub login in localStorage after you sign in to the CMS.
+  function githubToken() {
+    try {
+      const user = JSON.parse(localStorage.getItem("decap-cms-user") || "null");
+      return user && user.token ? user.token : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function fill(table, rows) {
+    table.replaceChildren();
+    const head = table.insertRow();
+    ["", "צפיות", "ביקורים"].forEach((label, i) => {
+      const th = document.createElement("th");
+      th.textContent = label;
+      if (i) th.className = "n";
+      head.appendChild(th);
+    });
+    if (!rows || !rows.length) {
+      const row = table.insertRow();
+      const cell = row.insertCell();
+      cell.colSpan = 3;
+      cell.className = "muted";
+      cell.textContent = "אין נתונים עדיין";
+      return;
+    }
+    rows.forEach((r) => {
+      const row = table.insertRow();
+      const name = row.insertCell();
+      name.className = "name";
+      name.textContent = r.name;
+      const views = row.insertCell();
+      views.className = "n";
+      views.textContent = r.views;
+      const visits = row.insertCell();
+      visits.className = "n";
+      visits.textContent = r.visits;
+    });
+  }
+
+  async function load() {
+    const status = document.getElementById("status");
+    const error = document.getElementById("error");
+    error.hidden = true;
+    status.hidden = false;
+    status.textContent = "טוען…";
+
+    const token = githubToken();
+    if (!token) {
+      status.textContent = "";
+      error.textContent = "צריך להתחבר לניהול המאמרים קודם (דף הניהול), ואז לחזור לכאן.";
+      error.hidden = false;
+      return;
+    }
+
+    try {
+      const res = await fetch(STATS_URL, { headers: { authorization: "Bearer " + token } });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "שגיאה " + res.status);
+
+      document.getElementById("views").textContent = data.total.views;
+      document.getElementById("visits").textContent = data.total.visits;
+      fill(document.getElementById("t-pages"), data.pages);
+      fill(document.getElementById("t-countries"), data.countries);
+      fill(document.getElementById("t-referrers"), data.referrers);
+      fill(document.getElementById("t-browsers"), data.browsers);
+      fill(document.getElementById("t-devices"), data.devices);
+      document.getElementById("totals").hidden = false;
+      document.getElementById("tables").hidden = false;
+      status.hidden = true;
+    } catch (e) {
+      status.textContent = "";
+      error.textContent = "לא הצלחנו לטעון את הנתונים: " + e.message;
+      error.hidden = false;
+    }
+  }
+
+  document.getElementById("reload").addEventListener("click", load);
+  load();
+</script>
+</body>
+</html>
