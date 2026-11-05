@@ -35,7 +35,7 @@
 <body>
 <main>
   <h1>סטטיסטיקות צפייה</h1>
-  <p class="muted"><a href="index.html">חזרה לניהול המאמרים</a> · <button id="reload" type="button">רענון</button></p>
+  <p class="muted"><a href="index.html">חזרה לניהול המאמרים</a> · <button id="reload" type="button">רענון</button> · <button id="theme-toggle" type="button">מצב כהה</button></p>
   <p id="status" class="muted">טוען…</p>
   <div id="error" class="error" hidden></div>
 
@@ -134,6 +134,25 @@
       error.hidden = false;
     }
   }
+
+  // Same theme setting as the admin panel (admin/index.html).
+  const themeBtn = document.getElementById("theme-toggle");
+  function themeLabel() {
+    const dark = document.documentElement.dataset.theme === "dark" ||
+      (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+    themeBtn.textContent = dark ? "מצב בהיר" : "מצב כהה";
+  }
+  try {
+    const saved = localStorage.getItem("admin-theme");
+    if (saved === "dark" || saved === "light") document.documentElement.dataset.theme = saved;
+  } catch (e) {}
+  themeBtn.addEventListener("click", () => {
+    const dark = document.documentElement.dataset.theme !== "dark";
+    document.documentElement.dataset.theme = dark ? "dark" : "light";
+    try { localStorage.setItem("admin-theme", dark ? "dark" : "light"); } catch (e) {}
+    themeLabel();
+  });
+  themeLabel();
 
   document.getElementById("reload").addEventListener("click", load);
   load();

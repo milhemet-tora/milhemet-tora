@@ -44,6 +44,32 @@
 <link href="../favicon.ico" rel="alternate icon" sizes="any"/>
 <link href="../apple-touch-icon.png" rel="apple-touch-icon"/>
 <!-- favicon:end -->
+<style>
+  /* Dark mode for the Decap panel: invert the whole page and re-invert media so pictures keep their colours. */
+  html[data-theme="dark"] { filter: invert(0.9) hue-rotate(180deg); background: #fff; }
+  html[data-theme="dark"] img, html[data-theme="dark"] video { filter: invert(1) hue-rotate(180deg); }
+  #admin-toolbar, #admin-toolbar * { font-family: Heebo, system-ui, sans-serif; }
+  #admin-toolbar {
+    position: fixed; bottom: 16px; inset-inline-start: 16px; z-index: 2147483000;
+    display: flex; gap: 8px; direction: rtl;
+  }
+  #admin-toolbar a, #admin-toolbar button {
+    font: 600 14px/1 Heebo, system-ui, sans-serif; padding: 10px 14px; border-radius: 8px;
+    border: 1px solid #b9b2a3; background: #fff; color: #222; cursor: pointer;
+    text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+  #admin-toolbar a:hover, #admin-toolbar button:hover { background: #f3efe6; }
+  /* Toolbar sits above the inverted page, so cancel the inversion on it. */
+  html[data-theme="dark"] #admin-toolbar { filter: invert(1) hue-rotate(180deg); }
+</style>
+<script>
+  // Apply the saved theme before the panel loads, so there is no flash of light mode.
+  (function () {
+    try {
+      if (localStorage.getItem("admin-theme") === "dark") document.documentElement.dataset.theme = "dark";
+    } catch (e) {}
+  })();
+</script>
 </head>
 <body>
 <!-- Decap CMS admin. Config: admin/config.yml. Setup: CMS-SETUP.md -->
@@ -59,6 +85,26 @@
     { raw: true }
   );
   CMS.init();
+</script>
+<div id="admin-toolbar">
+  <a href="stats.html">סטטיסטיקות</a>
+  <button id="theme-toggle" type="button">מצב כהה</button>
+</div>
+<script>
+  (function () {
+    var btn = document.getElementById("theme-toggle");
+    function label() {
+      btn.textContent = document.documentElement.dataset.theme === "dark" ? "מצב בהיר" : "מצב כהה";
+    }
+    btn.addEventListener("click", function () {
+      var dark = document.documentElement.dataset.theme !== "dark";
+      if (dark) document.documentElement.dataset.theme = "dark";
+      else delete document.documentElement.dataset.theme;
+      try { localStorage.setItem("admin-theme", dark ? "dark" : "light"); } catch (e) {}
+      label();
+    });
+    label();
+  })();
 </script>
 </body>
 </html>

@@ -31,12 +31,29 @@
 <link href="../apple-touch-icon.png" rel="apple-touch-icon"/>
 <link href="../site.webmanifest" rel="manifest"/>
 <!-- favicon:end -->
+<style>
+  .theme-btn {
+    font-family: inherit; font-size: .85rem; font-weight: 600; padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer;
+  }
+  .theme-btn:hover { border-color: var(--accent); }
+</style>
+<script>
+  // Apply the saved light/dark choice before the page paints, so there is no flash.
+  (function () {
+    try {
+      var t = localStorage.getItem("site-theme");
+      if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+</script>
 </head>
 <body>
 <header class="site-bar">
 <div class="wrap bar-inner">
 <a class="home" href="../index.html">מלחמת תורה</a>
 <nav aria-label="מיקום" class="crumb"><a href="../index.html">הראשי</a><span aria-hidden="true">/</span><span>מפתח מאמרים</span></nav>
+<button class="theme-btn" id="theme-toggle" type="button" aria-label="מעבר בין מצב בהיר לכהה">מצב כהה</button>
 </div>
 </header>
 <main class="wrap article">
@@ -96,5 +113,26 @@
 <footer class="wrap foot">
 <a class="back-link" href="../index.html">לעמוד הראשי</a>
 </footer>
+<script>
+  // Light/dark toggle. With no saved choice, the page follows the system setting.
+  (function () {
+    var btn = document.getElementById("theme-toggle");
+    function isDark() {
+      var t = document.documentElement.getAttribute("data-theme");
+      if (t) return t === "dark";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    function label() {
+      btn.textContent = isDark() ? "מצב בהיר" : "מצב כהה";
+    }
+    btn.addEventListener("click", function () {
+      var next = isDark() ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("site-theme", next); } catch (e) {}
+      label();
+    });
+    label();
+  })();
+</script>
 </body>
 </html>
