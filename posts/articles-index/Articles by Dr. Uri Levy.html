@@ -34,16 +34,25 @@
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b723b6e6f6924315ab26c544c5bea4a4"}'></script>
 <!-- End Cloudflare Web Analytics -->
+<script>
+  // Apply the saved light/dark choice before the page paints, so there is no flash.
+  (function () {
+    try {
+      var t = localStorage.getItem("site-theme");
+      if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+</script>
 </head>
 <body>
 <main class="wrap article">
-<nav class="back-top" aria-label="ניווט"><a class="back-link" href="../Articles.html">חזרה למאמרים</a></nav>
+<nav class="back-top" aria-label="ניווט"><a class="back-link" href="../Articles.html">חזרה למאמרים</a><button class="theme-btn" id="theme-toggle" type="button" aria-label="מעבר בין מצב בהיר לכהה">🌙</button></nav>
 <article>
 <h1>מאמרי ד"ר אורי לוי</h1>
 <div class="post-body">
 <div class="post-body entry-content" id="post-body-3758727903759831799" itemprop="description articleBody">
 <p>
-<a href="https://drive.google.com/file/d/0B_SYogRpdoWsV2tybFZ5Nlk5ZDA/view?usp=sharing" rel="noopener" target="_blank">על מקור "אמונת החכמים" ומהותה ועל אמינות החכמים שדוגלים בה</a><br/>
+<a href="../../pdfs/%D7%90%D7%9E%D7%95%D7%A0%D7%AA%20%D7%97%D7%9B%D7%9E%D7%99%D7%9D.pdf" rel="noopener" target="_blank">על מקור "אמונת החכמים" ומהותה ועל אמינות החכמים שדוגלים בה</a><br/>
 <a href="../../pdfs/%D7%95%D7%9C%D7%90%20%D7%A7%D7%A8%D7%93%D7%95%D7%9D%20%D7%9C%D7%97%D7%A4%D7%95%D7%A8%20%D7%91%D7%95.pdf" rel="noopener" target="_blank">"ולא קרדום לחפור בו"</a></p>
  
 
@@ -52,5 +61,27 @@
 </article>
 </main>
 <footer class="wrap foot"><a class="back-link" href="../Articles.html">חזרה למאמרים</a></footer>
+<script>
+  // Light/dark toggle. With no saved choice, the page follows the system setting.
+  (function () {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) return;
+    function isDark() {
+      var t = document.documentElement.getAttribute("data-theme");
+      if (t) return t === "dark";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    function label() {
+      btn.textContent = isDark() ? "☀️" : "🌙";
+    }
+    btn.addEventListener("click", function () {
+      var next = isDark() ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("site-theme", next); } catch (e) {}
+      label();
+    });
+    label();
+  })();
+</script>
 </body>
 </html>

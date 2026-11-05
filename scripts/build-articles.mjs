@@ -97,6 +97,15 @@ ${ogBlock({ title, description: summary, relOut })}<link href="https://fonts.goo
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="${up}assets/article.css" rel="stylesheet"/>
+<script>
+  // Apply the saved light/dark choice before the page paints, so there is no flash.
+  (function () {
+    try {
+      var t = localStorage.getItem("site-theme");
+      if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+</script>
 <link href="${up}favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="${up}favicon.ico" rel="alternate icon" sizes="any"/>
 <link href="${up}apple-touch-icon.png" rel="apple-touch-icon"/>
@@ -107,7 +116,7 @@ ${ogBlock({ title, description: summary, relOut })}<link href="https://fonts.goo
 </head>
 <body>
 <main class="wrap article">
-<nav class="back-top" aria-label="ניווט"><a class="back-link" href="../Articles.html">חזרה למאמרים</a></nav>
+<nav class="back-top" aria-label="ניווט"><a class="back-link" href="../Articles.html">חזרה למאמרים</a><button class="theme-btn" id="theme-toggle" type="button" aria-label="מעבר בין מצב בהיר לכהה">🌙</button></nav>
 <article>
 <h1>${esc(title)}</h1>
 ${date ? `<p class="article-meta">${esc(date)}</p>\n` : ""}<div class="post-body">
@@ -116,6 +125,28 @@ ${body}
 </article>
 </main>
 <footer class="wrap foot"><a class="back-link" href="../Articles.html">חזרה למאמרים</a></footer>
+<script>
+  // Light/dark toggle. With no saved choice, the page follows the system setting.
+  (function () {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) return;
+    function isDark() {
+      var t = document.documentElement.getAttribute("data-theme");
+      if (t) return t === "dark";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    function label() {
+      btn.textContent = isDark() ? "☀️" : "🌙";
+    }
+    btn.addEventListener("click", function () {
+      var next = isDark() ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("site-theme", next); } catch (e) {}
+      label();
+    });
+    label();
+  })();
+</script>
 </body>
 </html>
 `;

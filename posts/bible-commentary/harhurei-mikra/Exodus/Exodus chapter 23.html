@@ -34,10 +34,19 @@
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b723b6e6f6924315ab26c544c5bea4a4"}'></script>
 <!-- End Cloudflare Web Analytics -->
+<script>
+  // Apply the saved light/dark choice before the page paints, so there is no flash.
+  (function () {
+    try {
+      var t = localStorage.getItem("site-theme");
+      if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+</script>
 </head>
 <body>
 <main class="wrap article">
-<nav class="back-top" aria-label="ניווט"><a class="back-link" href="../Reflections%20on%20Scripture.html">חזרה להרהורי מקרא</a></nav>
+<nav class="back-top" aria-label="ניווט"><a class="back-link" href="../Reflections%20on%20Scripture.html">חזרה להרהורי מקרא</a><button class="theme-btn" id="theme-toggle" type="button" aria-label="מעבר בין מצב בהיר לכהה">🌙</button></nav>
 <article>
 <h1>שמות פרק כג</h1>
 <div class="post-body">
@@ -102,5 +111,27 @@
 </article>
 </main>
 <footer class="wrap foot"><a class="back-link" href="../Reflections%20on%20Scripture.html">חזרה להרהורי מקרא</a></footer>
+<script>
+  // Light/dark toggle. With no saved choice, the page follows the system setting.
+  (function () {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) return;
+    function isDark() {
+      var t = document.documentElement.getAttribute("data-theme");
+      if (t) return t === "dark";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    function label() {
+      btn.textContent = isDark() ? "☀️" : "🌙";
+    }
+    btn.addEventListener("click", function () {
+      var next = isDark() ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("site-theme", next); } catch (e) {}
+      label();
+    });
+    label();
+  })();
+</script>
 </body>
 </html>

@@ -214,7 +214,15 @@ article > .post-body:not(:has(.collection)) {
 .foot .back-link, .foot .back-link:hover { color: var(--btn-text); }
 .back-link:hover { transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 10px 26px rgba(31, 58, 95, .38); }
 /* Back button shown at the top of each post (same button as the footer one) */
-.back-top { display: flex; justify-content: center; margin: 8px 0 28px; }
+.back-top { display: flex; justify-content: center; margin: 8px 0 28px; position: relative; }
+/* Light/dark toggle, top left of the post (same button as the archive page) */
+.theme-btn {
+  font-family: inherit; font-size: 1.1rem; line-height: 1; padding: 6px 10px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer;
+}
+.theme-btn:hover { border-color: var(--accent); }
+.back-top .theme-btn { position: absolute; left: 0; top: 50%; transform: translateY(-50%); }
+@media (max-width: 560px) { .back-top { padding-inline: 52px; } }
 .back-link:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
 
 /* In-post chapter navigation ("לראש", "פרק קודם", "פרק הבא") as buttons */
@@ -296,6 +304,9 @@ article > .post-body:not(:has(.collection)) {
   text-underline-offset: 0.22em;
 }
 .paper-theme a:hover { color: var(--gold); text-decoration-color: transparent; }
+/* Buttons keep their own text color (the link rules above would turn it navy-on-navy) */
+.paper-theme a.back-link:link, .paper-theme a.back-link:visited, .paper-theme a.back-link:hover,
+.paper-theme a.back-link:active { color: var(--btn-text); text-decoration: none; }
 .paper-theme li::marker { font-weight: 700; color: var(--gold); }
 .paper-theme .paper .post-body { margin-top: 0; }
 
@@ -358,8 +369,8 @@ article > .post-body:not(:has(.collection)) {
 .post-body q.src-quote {
   quotes: none;
   font-style: normal;
-  color: var(--ink);
-  background: #dde6f2;
+  color: var(--text);
+  background: var(--accent-soft);
   border-inline-start: 3px solid var(--accent);
   border-radius: 6px;
   padding: 0.05em 0.45em;
